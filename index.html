@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Proxy Bridge - Android APK for Hotspot Speed Bypass</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* Top Navigation Bar */
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 0.8rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+        }
+
+        .logo {
+            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .logo span {
+            color: #38bdf8;
+            display: inline;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        /* Language Switcher */
+        .lang-switch {
+            display: flex;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 2px;
+            border: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 4px 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-header {
+            background: var(--primary);
+            color: white;
+            padding: 0.45rem 0.9rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.82rem;
+            white-space: nowrap;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 3.5rem 5% 3rem 5%;
+            text-align: center;
+            position: relative;
+            width: 100%;
+        }
+
+        .badge {
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1.2rem;
+            max-width: 100%;
+        }
+
+        .hero h1 {
+            font-size: clamp(1.6rem, 5vw, 3rem);
+            font-weight: 800;
+            line-height: 1.3;
+            max-width: 900px;
+            margin: 0 auto 1.2rem auto;
+        }
+
+        .hero p {
+            font-size: clamp(0.95rem, 2.8vw, 1.2rem);
+            color: #94a3b8;
+            max-width: 750px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .btn-cta {
+            background: var(--primary);
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-block;
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+            transition: 0.3s;
+            max-width: 100%;
+        }
+
+        /* Common Section Layout */
+        section {
+            padding: 3rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
+            color: var(--secondary);
+            font-weight: 800;
+            margin-bottom: 0.6rem;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* Problem vs Solution Section */
+        .prob-sol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card-prob {
+            background: #fff5f5;
+            border: 1.5px solid #fecaca;
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .card-sol {
+            background: #f0fdf4;
+            border: 1.5px solid #bbf7d0;
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .card-prob h3 { color: var(--danger); font-size: 1.15rem; margin-bottom: 0.8rem; }
+        .card-sol h3 { color: var(--accent); font-size: 1.15rem; margin-bottom: 0.8rem; }
+
+        .prob-sol-grid ul { list-style: none; }
+        .prob-sol-grid li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 24px;
+            font-size: 0.92rem;
+        }
+        .card-prob li::before { content: "❌"; position: absolute; left: 0; font-size: 0.8rem; }
+        .card-sol li::before { content: "✅"; position: absolute; left: 0; font-size: 0.8rem; }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+        .feature-card h3 { font-size: 1.1rem; margin-bottom: 0.4rem; color: var(--secondary); }
+        .feature-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* How It Works Steps */
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .step-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .step-num {
+            background: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        /* Pricing Plan Section */
+        .pricing-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 3rem 1.2rem;
+            text-align: center;
+        }
+
+        .pricing-card {
+            background: white;
+            color: var(--text-main);
+            max-width: 420px;
+            margin: 1.5rem auto 0 auto;
+            border-radius: 20px;
+            padding: 2rem 1.2rem;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .price-tag {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0.8rem 0;
+        }
+
+        .price-tag span {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin: 1.5rem 0;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .btn-wa {
+            background: #25d366;
+            color: white;
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            display: block;
+            text-align: center;
+        }
+
+        /* Requirements Box - Android Only Focus */
+        .req-box {
+            background: #eff6ff;
+            border: 1.5px solid #bfdbfe;
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .req-box h3 { color: var(--primary-dark); font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .req-box p { font-size: 0.92rem; color: #334155; }
+
+        /* FAQ Accordion */
+        .faq-wrapper { max-width: 800px; margin: 0 auto; }
+
+        .faq-item {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 0.8rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1rem 1.2rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            padding: 0 1.2rem 1rem 1.2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer { display: block; }
+
+        /* Floating WhatsApp Button */
+        .float-wa {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: #25d366;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        footer {
+            background: var(--secondary);
+            color: #94a3b8;
+            text-align: center;
+            padding: 2rem 5% 4rem 5%;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Responsive Fixes for Small Screen Smartphones (< 400px) */
+        @media (max-width: 420px) {
+            header { padding: 0.7rem 3%; }
+            .logo { font-size: 1rem; }
+            .lang-btn { padding: 3px 7px; font-size: 0.75rem; }
+            .btn-header { padding: 0.4rem 0.7rem; font-size: 0.75rem; }
+            .hero { padding: 2.5rem 3% 2rem 3%; }
+            .btn-cta { padding: 0.8rem 1.2rem; font-size: 0.92rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SECTION 1: Header / Navbar -->
+    <header>
+        <div class="logo">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="42" stroke="#00d2ff" stroke-width="12"/>
+                <circle cx="50" cy="50" r="28" fill="#0f172a"/>
+                <circle cx="50" cy="50" r="18" fill="#a855f7"/>
+                <path d="M50 20 V80 M20 50 H80" stroke="#00d2ff" stroke-width="6" stroke-linecap="round"/>
+                <circle cx="78" cy="22" r="8" fill="#ef4444"/>
+            </svg>
+            Proxy <span>Bridge</span>
+        </div>
+        <div class="nav-right">
+            <div class="lang-switch">
+                <button class="lang-btn active" onclick="switchLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="switchLanguage('hi')">हिंदी</button>
+            </div>
+            <a href="proxybridge.apk" class="btn-header" data-i18n="nav_download">Get APK</a>
+        </div>
+    </header>
+
+    <!-- SECTION 2: Hero Section -->
+    <div class="hero">
+        <div class="badge" data-i18n="hero_badge">📱 Android APK App for Hotspot Speed Bypass</div>
+        <h1 data-i18n="hero_title">Frustrated with Slow Internet When Sharing Hotspot to Laptop?</h1>
+        <p data-i18n="hero_subtitle">Telecom providers secretly limit and cap your hotspot speed when connected to PCs. Proxy Bridge Android App creates a secure proxy server on your phone to unlock full 5G/4G speed on your laptop!</p>
+        <a href="proxybridge.apk" class="btn-cta" data-i18n="hero_cta">🚀 Get Android APK @ ₹199</a>
+    </div>
+
+    <!-- SECTION 3: Problem vs Solution -->
+    <section>
+        <div class="section-header">
+            <h2 data-i18n="prob_title">Why Hotspot Internet Gets Slow on Laptops</h2>
+            <p data-i18n="prob_subtitle">Understand how mobile carriers throttle your hotspot data and how Proxy Bridge solves it.</p>
+        </div>
+        
+        <div class="prob-sol-grid">
+            <div class="card-prob">
+                <h3 data-i18n="prob_card_title">The Telecom Carrier Trap</h3>
+                <ul>
+                    <li data-i18n="prob_1">Carriers use Deep Packet Inspection (DPI) & TTL checks to detect PC connections.</li>
+                    <li data-i18n="prob_2">Even if your Android gets 100+ Mbps 5G speed, laptop hotspot is capped to 0.5 - 2 Mbps.</li>
+                    <li data-i18n="prob_3">Constant lagging during Zoom calls, YouTube buffering, and high gaming ping.</li>
+                    <li data-i18n="prob_4">Forces you to buy expensive Wi-Fi broadband or extra hotspot add-on data packs.</li>
+                </ul>
+            </div>
+
+            <div class="card-sol">
+                <h3 data-i18n="sol_card_title">The Proxy Bridge Solution</h3>
+                <ul>
+                    <li data-i18n="sol_1">Turns your Android smartphone into a local high-speed HTTP/SOCKS5 Proxy Server.</li>
+                    <li data-i18n="sol_2">Carriers perceive all laptop data traffic as internal smartphone app usage.</li>
+                    <li data-i18n="sol_3">Unlocks uncapped, maximum available 5G/4G bandwidth on your connected laptop.</li>
+                    <li data-i18n="sol_4">Zero monthly recharge! Pay once and enjoy lifetime high-speed hotspot sharing.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: Features Grid -->
+    <section>
+        <div class="section-header">
+            <h2 data-i18n="feat_title">Designed for Speed & Simplicity</h2>
+            <p data-i18n="feat_subtitle">Everything you need for seamless internet sharing without tech hassle.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3 data-i18n="f1_t">Zero Throttling</h3>
+                <p data-i18n="f1_d">Removes speed limits imposed by operators when sharing internet over hotspot or USB tethering.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔋</div>
+                <h3 data-i18n="f3_t">Battery Efficient</h3>
+                <p data-i18n="f3_d">Ultra-lightweight Android service compiled natively to consume under 1% phone battery.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 data-i18n="f4_t">Private & Secure</h3>
+                <p data-i18n="f4_d">All traffic stays inside your personal hotspot Wi-Fi network. No remote tracking servers.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📶</div>
+                <h3 data-i18n="f5_t">Universal SIM Support</h3>
+                <p data-i18n="f5_d">Works seamlessly across Jio, Airtel, Vi, BSNL, and international telecom networks.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: How To Connect Steps -->
+    <section>
+        <div class="section-header">
+            <h2 data-i18n="step_title">Simple 3-Step Setup Guide</h2>
+            <p data-i18n="step_subtitle">No root required on Android! Gets connected in under 2 minutes.</p>
+        </div>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-num">1</div>
+                <h3 data-i18n="s1_t">Install Android APK</h3>
+                <p data-i18n="s1_d">Install the Proxy Bridge App on your Android Smartphone and turn on Hotspot.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">2</div>
+                <h3 data-i18n="s2_t">Start Proxy Bridge App</h3>
+                <p data-i18n="s2_d">Open Proxy Bridge App and click "Start Server". Note down the displayed IP & Port (e.g., 8080).</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">3</div>
+                <h3 data-i18n="s3_t">Configure Laptop Proxy</h3>
+                <p data-i18n="s3_d">Go to Laptop Settings -> Proxy -> Enter the IP & Port shown on phone. Enjoy full speed!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: System Requirements -->
+    <section>
+        <div class="req-box">
+            <h3 data-i18n="req_title">📱 System Requirements</h3>
+            <p data-i18n="req_desc"><strong>Proxy Bridge is strictly an Android Application (.apk).</strong> It runs on Android Smartphones (Android 7.0 or higher) without requiring Root. The connected laptop/PC only needs proxy settings configured in its Wi-Fi settings.</p>
+        </div>
+    </section>
+
+    <!-- SECTION 7: Pricing Plan (₹199 Lifetime) -->
+    <section id="pricing">
+        <div class="pricing-section">
+            <h2 data-i18n="price_title">One-Time Lifetime Access</h2>
+            <p style="color: #94a3b8; max-width: 600px; margin: 0.5rem auto 0 auto;" data-i18n="price_subtitle">Say goodbye to recurring monthly Internet bills. Get full APK app license today.</p>
+
+            <div class="pricing-card">
+                <h3 style="font-size: 1.2rem;" data-i18n="plan_name">Proxy Bridge Android Pro License</h3>
+                <div class="price-tag">₹199 <span data-i18n="one_time">/ One-time Payment</span></div>
+
+                <ul class="pricing-features">
+                    <li data-i18n="pf_1">✅ Lifetime APK License Key</li>
+                    <li data-i18n="pf_2">✅ Bypass Hotspot Speed Restrictions Completely</li>
+                    <li data-i18n="pf_3">✅ No Root Required on Android Phone</li>
+                    <li data-i18n="pf_4">✅ Free Future App Updates Included</li>
+                    <li data-i18n="pf_5">✅ 24/7 Direct WhatsApp Setup Assistance</li>
+                </ul>
+
+                <a href="https://wa.me/916376612567?text=Hi,%20I%20want%20to%20buy%20Proxy%20Bridge%20Android%20APK%20for%20Rs.199" class="btn-wa" data-i18n="buy_wa_btn">💬 Buy APK via WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: FAQ -->
+    <section style="background: white; border-radius: 20px; border: 1px solid var(--border-color);">
+        <div class="section-header">
+            <h2 data-i18n="faq_title">Frequently Asked Questions</h2>
+            <p data-i18n="faq_subtitle">Got questions? We have answers.</p>
+        </div>
+
+        <div class="faq-wrapper">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span data-i18n="q1">Is this app installed on Laptop or Mobile?</span>
+                    <span>➕</span>
+                </div>
+                <div class="faq-answer" data-i18n="a1">
+                    This is an Android Application (.apk) installed on your Smartphone. You do NOT need to install any app on your laptop; just enter the Proxy IP & Port in your laptop's Wi-Fi proxy settings.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span data-i18n="q2">Are there any monthly charges after ₹199?</span>
+                    <span>➕</span>
+                </div>
+                <div class="faq-answer" data-i18n="a2">
+                    No! ₹199 is a one-time lifetime fee for the Android APK license.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span data-i18n="q3">What if I face difficulty setting up?</span>
+                    <span>➕</span>
+                </div>
+                <div class="faq-answer" data-i18n="a3">
+                    Our team provides instant setup guidance on WhatsApp (+91 6376612567).
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 9: Direct Support -->
+    <section style="text-align: center;">
+        <h2 data-i18n="sup_title">Need Instant Support?</h2>
+        <p style="color: var(--text-muted); margin: 0.5rem 0 1.2rem 0;" data-i18n="sup_subtitle">Connect directly with our team on WhatsApp.</p>
+        <a href="https://wa.me/916376612567" class="btn-cta" style="background: #25d366;" data-i18n="sup_btn">💬 WhatsApp (+91 6376612567)</a>
+    </section>
+
+    <!-- SECTION 10: Footer -->
+    <footer>
+        <p>&copy; 2026 Proxy Bridge. All rights reserved.</p>
+        <p style="font-size: 0.8rem; margin-top: 0.4rem;" data-i18n="footer_dev">Android APK Application for High-Speed Hotspot Sharing.</p>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/916376612567?text=Hi,%20I%20have%20a%20question%20about%20Proxy%20Bridge." class="float-wa" target="_blank">
+        💬 Help
+    </a>
+
+    <!-- JavaScript for Language Toggle & FAQ -->
+    <script>
+        const translations = {
+            en: {
+                nav_download: "Get APK",
+                hero_badge: "📱 Android APK App for Hotspot Speed Bypass",
+                hero_title: "Frustrated with Slow Internet When Sharing Hotspot to Laptop?",
+                hero_subtitle: "Telecom providers secretly limit and cap your hotspot speed when connected to PCs. Proxy Bridge Android App creates a secure proxy server on your phone to unlock full 5G/4G speed on your laptop!",
+                hero_cta: "🚀 Get Android APK @ ₹199",
+                prob_title: "Why Hotspot Internet Gets Slow on Laptops",
+                prob_subtitle: "Understand how mobile carriers throttle your hotspot data and how Proxy Bridge solves it.",
+                prob_card_title: "The Telecom Carrier Trap",
+                prob_1: "Carriers use Deep Packet Inspection (DPI) & TTL checks to detect PC connections.",
+                prob_2: "Even if your Android gets 100+ Mbps 5G speed, laptop hotspot is capped to 0.5 - 2 Mbps.",
+                prob_3: "Constant lagging during Zoom calls, YouTube buffering, and high gaming ping.",
+                prob_4: "Forces you to buy expensive Wi-Fi broadband or extra hotspot add-on data packs.",
+                sol_card_title: "The Proxy Bridge Solution",
+                sol_1: "Turns your Android smartphone into a local high-speed HTTP/SOCKS5 Proxy Server.",
+                sol_2: "Carriers perceive all laptop data traffic as internal smartphone app usage.",
+                sol_3: "Unlocks uncapped, maximum available 5G/4G bandwidth on your connected laptop.",
+                sol_4: "Zero monthly recharge! Pay once and enjoy lifetime high-speed hotspot sharing.",
+                feat_title: "Designed for Speed & Simplicity",
+                feat_subtitle: "Everything you need for seamless internet sharing without tech hassle.",
+                f1_t: "Zero Throttling",
+                f1_d: "Removes speed limits imposed by operators when sharing internet over hotspot or USB tethering.",
+                f3_t: "Battery Efficient",
+                f3_d: "Ultra-lightweight Android service compiled natively to consume under 1% phone battery.",
+                f4_t: "Private & Secure",
+                f4_d: "All traffic stays inside your personal hotspot Wi-Fi network. No remote tracking servers.",
+                f5_t: "Universal SIM Support",
+                f5_d: "Works seamlessly across Jio, Airtel, Vi, BSNL, and international telecom networks.",
+                step_title: "Simple 3-Step Setup Guide",
+                step_subtitle: "No root required on Android! Gets connected in under 2 minutes.",
+                s1_t: "Install Android APK",
+                s1_d: "Install the Proxy Bridge App on your Android Smartphone and turn on Hotspot.",
+                s2_t: "Start Proxy Bridge App",
+                s2_d: "Open Proxy Bridge App and click 'Start Server'. Note down the displayed IP & Port (e.g., 8080).",
+                s3_t: "Configure Laptop Proxy",
+                s3_d: "Go to Laptop Settings -> Proxy -> Enter the IP & Port shown on phone. Enjoy full speed!",
+                req_title: "📱 System Requirements",
+                req_desc: "Proxy Bridge is strictly an Android Application (.apk). It runs on Android Smartphones (Android 7.0 or higher) without requiring Root. The connected laptop/PC only needs proxy settings configured in its Wi-Fi settings.",
+                price_title: "One-Time Lifetime Access",
+                price_subtitle: "Say goodbye to recurring monthly Internet bills. Get full APK app license today.",
+                plan_name: "Proxy Bridge Android Pro License",
+                one_time: "/ One-time Payment",
+                pf_1: "✅ Lifetime APK License Key",
+                pf_2: "✅ Bypass Hotspot Speed Restrictions Completely",
+                pf_3: "✅ No Root Required on Android Phone",
+                pf_4: "✅ Free Future App Updates Included",
+                pf_5: "✅ 24/7 Direct WhatsApp Setup Assistance",
+                buy_wa_btn: "💬 Buy APK via WhatsApp",
+                faq_title: "Frequently Asked Questions",
+                faq_subtitle: "Got questions? We have answers.",
+                q1: "Is this app installed on Laptop or Mobile?",
+                a1: "This is an Android Application (.apk) installed on your Smartphone. You do NOT need to install any app on your laptop; just enter the Proxy IP & Port in your laptop's Wi-Fi proxy settings.",
+                q2: "Are there any monthly charges after ₹199?",
+                a2: "No! ₹199 is a one-time lifetime fee for the Android APK license.",
+                q3: "What if I face difficulty setting up?",
+                a3: "Our team provides instant setup guidance on WhatsApp (+91 6376612567).",
+                sup_title: "Need Instant Support?",
+                sup_subtitle: "Connect directly with our team on WhatsApp.",
+                sup_btn: "💬 WhatsApp (+91 6376612567)",
+                footer_dev: "Android APK Application for High-Speed Hotspot Sharing."
+            },
+            hi: {
+                nav_download: "APK लें",
+                hero_badge: "📱 हॉटस्पॉट स्पीड बायपास के लिए एंड्रॉइड APK ऐप",
+                hero_title: "लैपटॉप में हॉटस्पॉट कनेक्ट करने पर इंटरनेट स्लो चलने से परेशान हैं?",
+                hero_subtitle: "टेलीकॉम कंपनियाँ लैपटॉप कनेक्ट होते ही हॉटस्पॉट स्पीड कैप कर देती हैं। Proxy Bridge एंड्रॉइड ऐप आपके फोन पर एक लोकल प्रॉक्सी सर्वर बनाता है जिससे आपके लैपटॉप में फुल 5G/4G स्पीड अनलॉक हो जाती है!",
+                hero_cta: "🚀 ₹199 में एंड्रॉइड APK पाएं",
+                prob_title: "लैपटॉप पर हॉटस्पॉट इंटरनेट क्यों स्लो हो जाता है?",
+                prob_subtitle: "जानिए ऑपरेटर आपकी स्पीड कैसे कम करते हैं और हमारा Proxy Bridge ऐप इसे कैसे ठीक करता है।",
+                prob_card_title: "टेलीकॉम कंपनियों की चालाकी",
+                prob_1: "ऑपरेटर्स Deep Packet Inspection (DPI) से तुरंत पहचान लेते हैं कि डेटा PC में इस्तेमाल हो रहा है।",
+                prob_2: "फोन में 100+ Mbps 5G स्पीड होने के बावजूद लैपटॉप में स्पीड सिर्फ 0.5 - 2 Mbps कर दी जाती है।",
+                prob_3: "Zoom मीटिंग्स में रुकावट, YouTube बफरिंग और गेमिंग के दौरान हाई पिंंग की समस्या।",
+                prob_4: "मजबूरन आपको हर महीने महंगा वाई-फ़ाई ब्रॉडबैंड या अतिरिक्त डेटा रिचार्ज कराना पड़ता है।",
+                sol_card_title: "Proxy Bridge एंड्रॉइड समाधान",
+                sol_1: "यह आपके एंड्रॉइड फोन को एक हाई-स्पीड HTTP/SOCKS5 प्रॉक्सी सर्वर में बदल देता है।",
+                sol_2: "नेटवर्क यही समझेगा कि पूरा डेटा केवल आपके फोन के ऐप के अंदर ही इस्तेमाल हो रहा है।",
+                sol_3: "आपके कनेक्टेड लैपटॉप में फोन जैसी अनकैप्ड 5G/4G स्पीड अनलॉक होती है।",
+                sol_4: "कोई मंथली रिचार्ज नहीं! एक बार ऐप खरीदें और हमेशा फ़ास्ट हॉटस्पॉट चलाएं।",
+                feat_title: "सुपरफ़ास्ट स्पीड और आसान सेटअप",
+                feat_subtitle: "बिना किसी तकनीकी झंझट के आसान कनेक्टिविटी।",
+                f1_t: "नो-थ्रॉटलिंग स्पीड",
+                f1_d: "हॉटस्पॉट और USB टेदरिंग पर कंपनी द्वारा लगाई गई स्पीड लिमिट को पूरी तरह खत्म करता है।",
+                f3_t: "बैटरी फ्रेंडली",
+                f3_d: "लाइटवेट एंड्रॉइड सर्विस की वजह से यह फोन की 1% से भी कम बैटरी यूज़ करता है।",
+                f4_t: "सुरक्षित और प्राइवेट",
+                f4_d: "आपका डेटा केवल आपके फोन के वाई-फ़ाई नेटवर्क में रहता है। कोई थर्ड-पार्टी ट्रैकिंग नहीं।",
+                f5_t: "सभी सिम पर वर्क करे",
+                f5_d: "Jio, Airtel, Vi, BSNL और अंतरराष्ट्रीय नेटवर्क के साथ पूरी तरह सपोर्टेड।",
+                step_title: "आसान 3-स्टेप सेटअप गाइड",
+                step_subtitle: "एंड्रॉइड फोन को रूट (Root) करने की बिल्कुल ज़रुरत नहीं! 2 मिनट में कनेक्ट करें।",
+                s1_t: "एंड्रॉइड APK इंस्टॉल करें",
+                s1_d: "अपने एंड्रॉइड फोन में Proxy Bridge APK इंस्टॉल करें और हॉटस्पॉट ऑन करें।",
+                s2_t: "Proxy Bridge ऐप चालू करें",
+                s2_d: "ऐप खोलें और 'Start Server' दबाएं। स्क्रीन पर दिख रहा IP व Port (उदा. 8080) नोट करें।",
+                s3_t: "लैपटॉप में प्रॉक्सी डालें",
+                s3_d: "लैपटॉप Settings -> Proxy में जाएं -> फोन में दिख रहा IP और Port डालकर Save करें।",
+                req_title: "📱 सिस्टम आवश्यकताएं (Android Only)",
+                req_desc: "Proxy Bridge पूरी तरह से केवल एक एंड्रॉइड एप्लिकेशन (.apk) है। यह एंड्रॉइड फोन (Android 7.0 या ऊपर) पर बिना रूट के चलती है। लैपटॉप/PC में किसी ऐप की ज़रुरत नहीं होती, केवल Wi-Fi Proxy सेटिंग सेट करनी होती है।",
+                price_title: "वन-टाइम लाइफटाइम एक्सेस प्लान",
+                price_subtitle: "हर महीने के इंटरनेट बिल से मुक्ति पाएं। आज ही एंड्रॉइड APK लाइसेंस लें।",
+                plan_name: "Proxy Bridge Android Pro License",
+                one_time: "/ एक बार का भुगतान",
+                pf_1: "✅ लाइफटाइम APK लाइसेंस की",
+                pf_2: "✅ हॉटस्पॉट स्पीड लिमिट से पूरी तरह मुक्ति",
+                pf_3: "✅ एंड्रॉइड फोन में नो-रूट (No Root Required)",
+                pf_4: "✅ भविष्य के सभी APK अपडेट्स मुफ़्त",
+                pf_5: "✅ 24/7 direct व्हाट्सएप सपोर्ट सहायता",
+                buy_wa_btn: "💬 व्हाट्सएप पर APK खरीदें",
+                faq_title: "अक्सर पूछे जाने वाले सवाल (FAQ)",
+                faq_subtitle: "आपके मन में उठने वाले सवालों के जवाब।",
+                q1: "क्या यह ऐप लैपटॉप में इंस्टॉल होगी या फोन में?",
+                a1: "यह केवल आपके एंड्रॉइड स्मार्टफोन में इंस्टॉल होने वाली APK है। लैपटॉप में कोई ऐप इंस्टॉल नहीं करनी पड़ती, बस लैपटॉप की वाई-फ़ाई प्रॉक्सी सेटिंग में IP और Port डालना होता है।",
+                q2: "क्या ₹199 के बाद कोई हिडन मंथली चार्ज है?",
+                a2: "नहीं! ₹199 केवल एक बार देना है। इसके बाद लाइफटाइम यूज़ करें।",
+                q3: "अगर मुझे सेटअप करने में दिक्कत आए तो?",
+                a3: "हमारी टीम व्हाट्सएप (+91 6376612567) पर तुरंत आपको सेटअप कराने में मदद करेगी।",
+                sup_title: "कोई सवाल है या मदद चाहिए?",
+                sup_subtitle: "व्हाट्सएप पर हमारे डेवलपर्स से सीधे बात करें।",
+                sup_btn: "💬 व्हाट्सएप सपोर्ट (+91 6376612567)",
+                footer_dev: "सुपरफ़ास्ट मोबाइल हॉटस्पॉट शेयरिंग के लिए एंड्रॉइड APK।"
+            }
+        };
+
+        function switchLanguage(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            if(lang === 'en') {
+                document.querySelectorAll('.lang-btn')[0].classList.add('active');
+            } else {
+                document.querySelectorAll('.lang-btn')[1].classList.add('active');
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+        }
+
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            item.classList.toggle('active');
+            const icon = element.querySelector('span:last-child');
+            icon.innerText = item.classList.contains('active') ? '➖' : '➕';
+        }
+    </script>
+</body>
+</html>
